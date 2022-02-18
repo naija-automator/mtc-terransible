@@ -36,11 +36,19 @@ resource "aws_instance" "mtc_main" {
   }
 
   provisioner "local-exec" {
-     command = "printf '\n${self.public_ip}' >> aws_hosts"
+     command = "printf '\n${self.public_ip}' >> aws_hosts && aws ec2 wait instance-status-ok --instance-ids ${self.id} --region eu-west-2"
   }
 
   provisioner "local-exec" {
      when = destroy
      command = "sed -i '/^[0-9]/d' aws_hosts"
+  }
+}
+
+resource "null_resource" "grafana_install" {
+  depends_on = [aws_instance.mtc_main]
+  provisioner "local-exec" {
+    command = "ansible-playbook -i aws_hosts -u ubuntu --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/main-playbook.yml"
+    #command = "ansible-playbook -i aws_hosts --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/grafana.yml"
   }
 }
