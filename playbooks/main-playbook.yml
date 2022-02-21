@@ -2,6 +2,9 @@
 - name: Bootstrap Main Node
   hosts: main
   become: yes
+  vars:
+    listen_address: 0.0.0.0
+    listen_port: 9090
 
   tasks:
   - name: Download apt key
@@ -28,7 +31,7 @@
 
   - name: Download Prometheus
     ansible.builtin.get_url:
-      url: url: https://github.com/prometheus/prometheus/releases/download/v2.30.3/prometheus-2.30.3.linux-amd64.tar.gz
+      url: https://github.com/prometheus/prometheus/releases/download/v2.30.3/prometheus-2.30.3.linux-amd64.tar.gz
       dest: /home/ubuntu/
   
   - name: Unzip promethues
@@ -37,7 +40,7 @@
       dest: /home/ubuntu/
       remote_src: yes
   
-  - name: Create Promtheus Group:
+  - name: Create Promtheus Group
     ansible.builtin.group:
       name: prometheus
       state: present
@@ -68,10 +71,11 @@
       src: "{{ item }}"
       dest: /usr/local/bin
       remote_src: yes
+      mode: '0755'
       owner: prometheus
       group: prometheus
     loop: 
-      - /home/ubuntu/prometheus-2.30.3.;inux-amd64/prometheus
+      - /home/ubuntu/prometheus-2.30.3.linux-amd64/prometheus
       - /home/ubuntu/prometheus-2.30.3.linux-amd64/promtool
 
   - name: Copy Files...
@@ -80,13 +84,25 @@
       dest: /etc/prometheus
       remote_src: yes
     loop:
-      - /home/ubuntu/prometheus-2.30.3.;inux-amd64/consoles/
+      - /home/ubuntu/prometheus-2.30.3.linux-amd64/consoles/
       - /home/ubuntu/prometheus-2.30.3.linux-amd64/console_libraries
 
+  - name: Create Config File
+    ansible.builtin.template:
+      src: prometheus.yml.j2
+      dest: /etc/prometheus/prometheus.yml
 
+  
+  - name: Create Systemd File
+    ansible.builtin.template:
+      src: prometheus.service.j2
+      dest: /etc/systemd/system/prometheus.service
 
-
-
+  - name: Ensure Prometheus is started
+    ansible.builtin.systemd:
+      state: started
+      enabled: yes
+      name: prometheus
 
         # - name: Set Perms
         #ansible.builtin.file:

@@ -1,0 +1,29 @@
+---
+- name: Install Jenkins
+  hosts: main
+  become: yes
+
+  tasks: 
+  - name: download apt key
+    ansible.builtin.apt_key:
+      url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+      state: present
+  - name: add jenkins repo to sources.list
+    ansible.builtin.apt_repository:
+      repo: deb https://pkg.jenkins.io/debian-stable binary/
+      state: present
+      filename: jenkins
+  - name: install java
+    apt:
+      update_cache: yes
+      name: openjdk-11-jdk
+      state: present
+  - name: update apt once & install jenkins
+    apt:
+      name: jenkins
+      state: present
+  - name: ensure jenkins is started and enabled
+    ansible.builtin.systemd:
+      name: jenkins
+      enabled: yes
+      state: started
