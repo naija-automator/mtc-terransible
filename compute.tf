@@ -45,11 +45,12 @@ resource "aws_instance" "mtc_main" {
   }
 }
 
-resource "null_resource" "grafana_install" {
-  depends_on = [aws_instance.mtc_main]
-  provisioner "local-exec" {
-    #command = "ansible-playbook -i aws_hosts -u ubuntu --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/jenkins.yml"
-    command = "ansible-playbook -i aws_hosts -u ubuntu --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/main-playbook.yml"
-    #command = "ansible-playbook -i aws_hosts --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/grafana.yml"
-  }
-}
+### No lonfer deploying Grafana with TF
+#resource "null_resource" "grafana_install" {
+#  depends_on = [aws_instance.mtc_main]
+#  provisioner "local-exec" {
+   # #command = "ansible-playbook -i aws_hosts -u ubuntu --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/jenkins.yml"
+#    command = "ansible-playbook -i aws_hosts -u ubuntu --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/main-playbook.yml"
+   # #command = "ansible-playbook -i aws_hosts --key-file /home/ktimmons/.ssh/mtcec2key ./playbooks/grafana.yml"
+#  }
+#}
