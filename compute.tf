@@ -36,7 +36,7 @@ resource "aws_instance" "mtc_main" {
   }
 
   provisioner "local-exec" {
-     command = "printf '\n${self.public_ip}' >> aws_hosts && aws ec2 wait instance-status-ok --instance-ids ${self.id} --region eu-west-2"
+     command = "printf '\n${self.public_ip}' >> aws_hosts"
   }
 
   provisioner "local-exec" {
