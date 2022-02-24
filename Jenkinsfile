@@ -31,6 +31,12 @@ pipeline {
         sh 'aws ec2 wait instance-status-ok --region eu-west-2'
       }
     }
+    
+    stage('Ansible') {
+      steps {
+        ansiblePalybook(credentialsId: 'ubuntu-user-keys', inventory: 'aws_hosts', playbook: 'playbook/main-playbook.yml')
+      }
+    }   
 
     stage('Destroy') {
       steps {
