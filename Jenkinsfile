@@ -34,7 +34,7 @@ pipeline {
     
     stage('Ansible') {
       steps {
-        ansiblePlaybook(credentialsId: 'ubuntu-local', inventory: 'aws_hosts', playbook: 'playbooks/main-playbook.yml', disableHostKeyChecking: true)
+        ansiblePlaybook(credentialsId: 'ubuntu-local', inventory: 'aws_hosts', playbook: 'playbooks/main-playbook.yml', disableHostKeyChecking: true, colorized: true)
       }
     }   
 
