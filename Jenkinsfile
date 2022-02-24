@@ -34,7 +34,7 @@ pipeline {
     
     stage('Ansible') {
       steps {
-        ansiblePalybook(credentialsId: 'ubuntu-user-keys', inventory: 'aws_hosts', playbook: 'playbook/main-playbook.yml')
+        ansiblePlaybook(credentialsId: 'ubuntu-user-keys', inventory: 'aws_hosts', playbook: 'playbook/main-playbook.yml')
       }
     }   
 
