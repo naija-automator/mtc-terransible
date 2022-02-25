@@ -26,7 +26,7 @@ pipeline {
         ok "Apply this plan"
       }
       steps {
-        echo @Apply Accepted'
+        echo 'Apply Accepted'
       }
     }
     
