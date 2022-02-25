@@ -44,12 +44,20 @@ pipeline {
     }
     
     stage('Ansible') {
+      input {
+        message "Should Ansible run?"  
+        ok "Run Ansible"
+      }
       steps {
         ansiblePlaybook(credentialsId: 'ubuntu-local', inventory: 'aws_hosts', playbook: 'playbooks/main-playbook.yml', disableHostKeyChecking: true, colorized: true)
       }
     }   
 
     stage('Destroy') {
+      input {
+        message "Do you want to destroy resources?"
+        ok "Tear down environment"
+      }
       steps {
         sh 'terraform destroy --auto-approve -no-color'  
       }
