@@ -43,16 +43,32 @@ pipeline {
       }
     }
     
-    stage('Ansible') {
+    stage('Validate Ansible') {
       input {
-        message "Should Ansible run?"  
-        ok "Run Ansible"
+        message "Do you wnat to run Ansible?"
+        ok "Run Ansible!"
       }
+      steps {
+        echo 'Ansible Accepted'
+      }
+     }
+ 
+    stage('Ansible') {
       steps {
         ansiblePlaybook(credentialsId: 'ubuntu-local', inventory: 'aws_hosts', playbook: 'playbooks/main-playbook.yml', disableHostKeyChecking: true, colorized: true)
       }
     }   
-
+    
+    stage('Validate Destroy') {
+      input {
+        message "Do you want to tear down environment?"
+        ok "Tear down env now!"
+      }
+      steps {
+        echo 'Ansible Accepted'
+      }
+    }
+    
     stage('Destroy') {
       input {
         message "Do you want to destroy resources?"
