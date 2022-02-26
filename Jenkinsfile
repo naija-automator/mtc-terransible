@@ -10,6 +10,7 @@ pipeline {
     stage('Init') {
       steps {
         sh 'ls'
+        sh 'cat "$BRANCH_NAME.tfvars'
         sh 'terraform init -no-color'
       }
     }
@@ -21,6 +22,10 @@ pipeline {
     }
     
     stage('Validate Apply') {
+      when {
+        beforeInput true
+        branch "dev"
+      }
       input {
         message "Do you want to apply this plan?"
         ok "Apply this plan"
@@ -33,7 +38,7 @@ pipeline {
 
     stage('Apply') {
       steps {
-        sh 'terraform apply --auto-approve -no-color'
+        sh 'terraform apply --auto-approve -no-color -var-file="$BRANCH_NAME.tfvars"'
       }
     }
     
@@ -44,8 +49,12 @@ pipeline {
     }
     
     stage('Validate Ansible') {
+      when {
+        beforeInput true
+        branch "dev"
+      }
       input {
-        message "Do you wnat to run Ansible?"
+        message "Do you want to run Ansible?"
         ok "Run Ansible!"
       }
       steps {
@@ -65,17 +74,13 @@ pipeline {
         ok "Tear down env now!"
       }
       steps {
-        echo 'Ansible Accepted'
+        echo 'Ansible Destroyed resources'
       }
     }
     
     stage('Destroy') {
-      input {
-        message "Do you want to destroy resources?"
-        ok "Tear down environment"
-      }
       steps {
-        sh 'terraform destroy --auto-approve -no-color'  
+        sh 'terraform destroy --auto-approve -no-color -var-file="$BRANCH_NAME.tfvars'  
       }
 
     } 
@@ -85,7 +90,7 @@ pipeline {
       echo 'Success!'
     }
     failure { 
-      sh 'terraform destroy --auto-approve -no-color'
+      sh 'terraform destroy --auto-approve -no-color -var-file=$BRANCH_NAME.tfvars'
     }
   } 
 }
