@@ -80,7 +80,7 @@ pipeline {
     
     stage('Destroy') {
       steps {
-        sh 'terraform destroy --auto-approve -no-color -var-file="$BRANCH_NAME.tfvars'  
+        sh 'terraform destroy --auto-approve -no-color -var-file="$BRANCH_NAME.tfvars"'  
       }
 
     } 
@@ -90,7 +90,7 @@ pipeline {
       echo 'Success!'
     }
     failure { 
-      sh 'terraform destroy --auto-approve -no-color -var-file=$BRANCH_NAME.tfvars'
+      sh 'terraform destroy --auto-approve -no-color -var-file=$BRANCH_NAME.tfvars"'
     }
   } 
 }
