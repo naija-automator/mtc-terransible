@@ -53,6 +53,10 @@ output "instance_ips" {
   value = [for i in aws_instance.mtc_main[*]: i.public_ip]
 }
 
+output "instance_ids" {
+  value = {for i in aws_instance.mtc_main[*]: i.id]
+}
+
 ### No longer deploying Grafana with TF
 #resource "null_resource" "grafana_install" {
 #  depends_on = [aws_instance.mtc_main]
