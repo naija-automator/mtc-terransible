@@ -45,7 +45,12 @@ resource "aws_instance" "mtc_main" {
   }
 }
 
-### No lonfer deploying Grafana with TF
+output "grafana_access" {
+  value = {for i in aws_instance.mtc_main[*] : i.tags.Name => "${i.public_ip}:3000"}
+}
+                                              
+
+### No longer deploying Grafana with TF
 #resource "null_resource" "grafana_install" {
 #  depends_on = [aws_instance.mtc_main]
 #  provisioner "local-exec" {
