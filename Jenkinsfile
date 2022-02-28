@@ -42,6 +42,14 @@ pipeline {
       }
     }
     
+   stage('Invemtory') {
+     steps {
+       sh '''printf \\
+       "\\n$(terraform output -json instance_ips | jq -r \'.[]\')"  \\
+       >> aws_hosts'''
+     }
+   }   
+
     stage('Ec2 wait') {
       steps {
         sh '''aws ec2 wait instance-status-ok  \\
