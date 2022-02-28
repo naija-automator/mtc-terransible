@@ -54,7 +54,7 @@ output "instance_ips" {
 }
 
 output "instance_ids" {
-  value = {for i in aws_instance.mtc_main[*]: i.id]
+  value = [for i in aws_instance.mtc_main[*]: i.id]
 }
 
 ### No longer deploying Grafana with TF
