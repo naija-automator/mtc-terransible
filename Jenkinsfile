@@ -42,7 +42,7 @@ pipeline {
       }
     }
     
-   stage('Invemtory') {
+   stage('Inventory') {
      steps {
        sh '''printf \\
        "\\n$(terraform output -json instance_ips | jq -r \'.[]\')"  \\
