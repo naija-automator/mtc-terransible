@@ -78,6 +78,12 @@ pipeline {
       }
     }   
     
+    stage('Test Grafana and Prometheus') {
+      steps {
+        ansiblePlaybook(credentialsId: 'ubuntu-local', inventory: 'aws_hosts', playbook: 'playbooks/node-test.yml')
+      }
+    }
+
     stage('Validate Destroy') {
       input {
         message "Do you want to tear down environment?"
